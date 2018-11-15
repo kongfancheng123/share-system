@@ -11,6 +11,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 
 import java.nio.charset.Charset;
+import java.util.Date;
 import java.util.List;
 
 import static com.agioe.tool.data.tcp.Header.LENGTH_FIELD_BYTE_COUNT;
@@ -105,5 +106,6 @@ public class DataSend extends AbstractProtocol {
         //当前发送次数+1
         msg.setNumber(msg.getNumber() + 1);
         MessageDelayQueue.add(msg);
+        System.out.println("最终发送数据时间:"+System.currentTimeMillis());
     }
 }

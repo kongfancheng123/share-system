@@ -1,5 +1,7 @@
 package com.agioe.tool.data.thread;
 
+import com.agioe.tool.data.Test.TcpComponent;
+import com.agioe.tool.data.common.SpringContextUtil;
 import com.agioe.tool.data.dao.EquipmentInfoDao;
 import com.agioe.tool.data.entity.EquipmentInfo;
 import com.agioe.tool.data.entity.MonitorProperty;
@@ -42,8 +44,8 @@ public class SendEquipmentRealtimeDataThread implements Runnable {
         try {
             while (true) {
                 System.out.println(Thread.currentThread().getName());
-                logger.info("上传周期为:"+String.valueOf(feedCycle)+"毫秒");
-                Thread.currentThread().sleep(feedCycle);
+                List<SensorData> dataList = new ArrayList<>();
+//                logger.info("上传周期为:"+String.valueOf(feedCycle)+"毫秒");
                 for (String[] propertyCodeAndValue1 : propertyCodeAndValue) {
                     boolean isIn = Thread.currentThread().isInterrupted();
                     System.out.println(isIn);
@@ -69,9 +71,10 @@ public class SendEquipmentRealtimeDataThread implements Runnable {
 //                    equipmentInfo.setEquipmentPropertyTemplateCode(equipmentPropertyTemplateCode);
                     equipmentInfo.setEquipmentPropertyCode(equipmentPropertyCode);
                     List<EquipmentInfo> equipmentInfos = equipmentInfoDao.selectByEquipmentInfo(equipmentInfo);
-                    List<SensorData> dataList = new ArrayList<>();
+
                     if (equipmentInfos.size() > 0) {
                         for (EquipmentInfo equipmentInfo1 : equipmentInfos) {
+//                            logger.info("设备名称:"+equipmentInfo1.getEquipmentName());
                             String dataVal = "";
                             Double baseValueDouble = Double.valueOf(baseValue);
                             Double upAndDownDouble = Double.valueOf(upAndDown);
@@ -103,10 +106,11 @@ public class SendEquipmentRealtimeDataThread implements Runnable {
                             dataList.add(sensorData);
                         }
                     }
-                    //todo:发送实时数据
-                    DefaultTcpApiInstance defaultTcpApiInstance = TcpApiSingleton.getDefaultTcpApiInstance();
-                    defaultTcpApiInstance.sendSensorData(dataList);
                 }
+                //todo:发送实时数据
+                DefaultTcpApiInstance defaultTcpApiInstance = TcpApiSingleton.INSTANCE.getDefaultTcpApiInstance();
+                defaultTcpApiInstance.sendSensorData(dataList);
+                Thread.currentThread().sleep(feedCycle);
             }
         } catch (InterruptedException e) {
             boolean isIn = Thread.currentThread().isInterrupted();

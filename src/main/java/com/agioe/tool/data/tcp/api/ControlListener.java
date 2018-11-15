@@ -17,4 +17,7 @@ public interface ControlListener {
      * @param parameterList 控制命令参数
      */
     void onControlArrive(List<ControlParameter> parameterList);
+
+
+
 }

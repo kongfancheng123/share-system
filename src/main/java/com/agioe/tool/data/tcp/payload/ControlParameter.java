@@ -15,7 +15,7 @@ public class ControlParameter {
      */
     private String key;
     /**
-     * 控制命令类型
+     * 控制命令类型 0和1代表遥控
      */
     private Byte cmdType;
     /**
@@ -27,7 +27,7 @@ public class ControlParameter {
      */
     private Short controlTypeVal;
     /**
-     * 控制动作值
+     * 控制动作值 0为关,1为开
      */
     private String controlActionVal;
     /**

@@ -59,7 +59,7 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object obj) throws Exception {
         ByteBuf buf = (ByteBuf) obj;
-        logger.info("收到数据:{}", ByteBufUtil.hexDump(buf));
+//        logger.info("收到数据:{}", ByteBufUtil.hexDump(buf));
         //解析协议头
         int sessionId = buf.readInt();
         int length = buf.readInt();

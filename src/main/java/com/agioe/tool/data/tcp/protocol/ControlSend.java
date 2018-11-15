@@ -10,6 +10,7 @@ import io.netty.buffer.ByteBuf;
 
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static com.agioe.tool.data.tcp.payload.meta.ControlConstant.*;
@@ -35,6 +36,7 @@ public class ControlSend extends AbstractProtocol {
 
     @Override
     public Message decode(ByteBuf bodyBuf, Header header) {
+        System.out.println("收到数据事件:"+System.currentTimeMillis());
         Message message = new Message();
         List<Object> body = new ArrayList<>();
         //控制点数量
@@ -80,6 +82,7 @@ public class ControlSend extends AbstractProtocol {
         }
         message.setHeader(header);
         message.setBody(body);
+        System.out.println("解码成功");
         return message;
     }
 
@@ -107,7 +110,8 @@ public class ControlSend extends AbstractProtocol {
     public void onAvailable(Message msg) {
         List<Object> body = msg.getBody();
         List<ControlParameter> parameterList = (List) body;
-        ControlQueue.getInstance().push(parameterList);
+
+        ControlQueue.push(parameterList);
     }
 
     @Override

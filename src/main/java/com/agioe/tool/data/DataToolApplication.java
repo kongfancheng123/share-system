@@ -4,6 +4,7 @@ import com.agioe.tool.data.Test.TcpComponent;
 import com.agioe.tool.data.common.SpringContextUtil;
 import com.agioe.tool.data.log.LoggerMessage;
 import com.agioe.tool.data.log.LoggerQueue;
+import com.agioe.tool.data.singleton.TcpApiSingleton;
 import com.agioe.tool.data.tcp.api.ControlListener;
 import com.agioe.tool.data.tcp.api.DefaultTcpApiInstance;
 import com.agioe.tool.data.tcp.api.TcpApi;
@@ -18,11 +19,13 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -43,8 +46,6 @@ public class DataToolApplication implements CommandLineRunner {
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
-    @Autowired
-    private ControlListener controlListener;
 
     public static void main(String[] args) {
         SpringApplication application = new SpringApplication(DataToolApplication.class);
@@ -52,16 +53,12 @@ public class DataToolApplication implements CommandLineRunner {
         application.run(args);
     }
 
-    @Bean
-    public SpringContextUtil springContextUtil() {
-        return new SpringContextUtil();
-    }
-
 
     @Override
     public void run(String... args) throws Exception {
         //通信服务端初始化
         Server.init();
+        TcpApiSingleton.INSTANCE.getDefaultTcpApiInstance();
     }
 
     /**
@@ -89,11 +86,7 @@ public class DataToolApplication implements CommandLineRunner {
     }
 
 
-    @Bean
-    public TcpComponent tcpComponent() {
-        TcpApi instance = new DefaultTcpApiInstance(controlListener);
-        return new TcpComponent(instance);
-    }
+
 
     //配置mybatis的分页插件pageHelper
     @Bean
@@ -106,5 +99,10 @@ public class DataToolApplication implements CommandLineRunner {
         properties.setProperty("dialect", "postgresql");    //配置mysql数据库的方言
         pageHelper.setProperties(properties);
         return pageHelper;
+    }
+
+    @Bean
+    public SpringContextUtil springContextUtil() {
+        return new SpringContextUtil();
     }
 }

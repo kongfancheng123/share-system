@@ -14,33 +14,27 @@ import java.util.concurrent.LinkedBlockingQueue;
  * @since 2018/10/10
  */
 public class ControlQueue {
-    /**
-     * 队列大小
-     */
-    public static final int QUEUE_MAX_SIZE = 10000;
-    private static ControlQueue controlQueue = new ControlQueue();
+
     /**
      * 阻塞队列
      */
-    private BlockingQueue<List<ControlParameter>> blockingQueue = new LinkedBlockingQueue<>(QUEUE_MAX_SIZE);
+    private static BlockingQueue<List<ControlParameter>> linkedQueue = new LinkedBlockingQueue<>(1000);
 
-    private ControlQueue() {
-
-    }
-
-    public static ControlQueue getInstance() {
-        return controlQueue;
-    }
 
     /**
      * 消息入队
      *
-     * @param parameter
+     * @param parameterList
      * @return
      */
-    public boolean push(List<ControlParameter> parameterList) {
+    public static void push(List<ControlParameter> parameterList) {
         //队列满了就抛出异常，不阻塞
-        return this.blockingQueue.add(parameterList);
+//        try {
+            linkedQueue.add(parameterList);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+        System.out.println();
     }
 
     /**
@@ -48,10 +42,10 @@ public class ControlQueue {
      *
      * @return
      */
-    public List<ControlParameter> poll() {
+    public static List<ControlParameter> poll() {
         List<ControlParameter> result = null;
         try {
-            result = this.blockingQueue.take();
+            result = linkedQueue.take();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

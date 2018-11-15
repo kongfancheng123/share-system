@@ -31,7 +31,7 @@ public class DefaultTcpApiInstance implements TcpApi {
         ExecutorService executorService = Executors.newFixedThreadPool(1);
         Runnable runnable = () -> {
             while (true) {
-                List<ControlParameter> controlParameterList = ControlQueue.getInstance().poll();
+                List<ControlParameter> controlParameterList = ControlQueue.poll();
                 if (listener != null) {
                     listener.onControlArrive(controlParameterList);
                 }

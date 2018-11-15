@@ -1,6 +1,7 @@
 package com.agioe.tool.data.service.impl;
 
 import com.agioe.tool.data.Qo.*;
+import com.agioe.tool.data.Test.TcpComponent;
 import com.agioe.tool.data.Vo.*;
 import com.agioe.tool.data.dao.EquipmentInfoDao;
 import com.agioe.tool.data.entity.*;
@@ -585,12 +586,12 @@ public class EquipmentInfoServiceImpl implements EquipmentInfoService {
         }
         PageBean<ShowAllEquipmentInfoVo> pageData = new PageBean<>(pageNow, pageSize, countNums);
         pageData.setItems(showAllEquipmentInfoVos);
-        logger.info("分页查询设备信息");
         return WebResponse.success(pageData);
     }
 
     @Override
     public WebResponse sendEquipmentRealtimeData(SendEquipmentRealtimeDataQo sendEquipmentRealtimeDataQo, String ip) throws Exception {
+        logger.info("开始发送数据时间"+System.currentTimeMillis());
         //批量发送
         String parentNodeCode = sendEquipmentRealtimeDataQo.getParentNodeCode();
 //        String equipmentPropertyTemplateCode = sendEquipmentRealtimeDataQo.getEquipmentPropertyTemplateCode();
@@ -798,6 +799,7 @@ public class EquipmentInfoServiceImpl implements EquipmentInfoService {
 
     @Override
     public WebResponse sendEventHistory(SendEventHistoryQo sendEventHistoryQo) {
+        logger.info("开发发送事件时间:"+System.currentTimeMillis());
         String eventCode = sendEventHistoryQo.getEventCode();
         String eventType = sendEventHistoryQo.getEventType();
         //获取事件类型值
@@ -864,8 +866,9 @@ public class EquipmentInfoServiceImpl implements EquipmentInfoService {
             sensorEvent.setType(Byte.decode(eventType));
             sensorEvent.setOrgCode("");
             eventList.add(sensorEvent);
-            DefaultTcpApiInstance defaultTcpApiInstance = TcpApiSingleton.getDefaultTcpApiInstance();
+            DefaultTcpApiInstance defaultTcpApiInstance = TcpApiSingleton.INSTANCE.getDefaultTcpApiInstance();
             defaultTcpApiInstance.sendSensorEvent(eventList);
+            logger.info("事件发送完成时间:"+System.currentTimeMillis());
         }
 
         return WebResponse.success();
@@ -908,7 +911,7 @@ public class EquipmentInfoServiceImpl implements EquipmentInfoService {
             sensorEvent.setType(Byte.decode("2"));
             sensorEvent.setOrgCode("");
             eventList.add(sensorEvent);
-            DefaultTcpApiInstance defaultTcpApiInstance = TcpApiSingleton.getDefaultTcpApiInstance();
+            DefaultTcpApiInstance defaultTcpApiInstance = TcpApiSingleton.INSTANCE.getDefaultTcpApiInstance();
             defaultTcpApiInstance.sendSensorEvent(eventList);
         }
         return WebResponse.success();
