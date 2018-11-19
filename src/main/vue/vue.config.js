@@ -43,7 +43,7 @@ module.exports = {
   // 配置 webpack-dev-server 行为
   devServer: {
     port: 9000, // 端口
-    host: '192.168.52.28', // IP
+    host: '192.168.52.28', // IP 192.168.52.28发出的请求,最后映射到http://192.168.52.50:8080上面请求
     open: true, // 自动打开浏览器
     proxy: 'http://192.168.52.50:8080'
     // proxy: {
