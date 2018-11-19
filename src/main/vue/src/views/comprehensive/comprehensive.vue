@@ -254,6 +254,15 @@
           <el-input v-model.number="formWarn.eventValue"
                     placeholder="请输入事件值"></el-input>
         </el-form-item>
+
+        <el-form-item label="报警时间"
+                      prop="alarmUpdate">
+          <el-date-picker v-model="formWarn.alarmUpdate"
+                          type="datetime"
+                          placeholder="选择日期时间">
+          </el-date-picker>
+        </el-form-item>
+
       </el-form>
 
       <div slot="footer"
@@ -429,6 +438,9 @@ export default {
       // 验证规则
       rules: {
         parentNodeCode: [
+          { required: true, message: '内容不能为空', trigger: 'blur' }
+        ],
+        alarmUpdate: [
           { required: true, message: '内容不能为空', trigger: 'blur' }
         ],
         equipmentType: [
