@@ -847,7 +847,7 @@ public class EquipmentInfoServiceImpl implements EquipmentInfoService {
         List<EquipmentInfo> equipmentInfos = equipmentInfoDao.selectByEquipmentInfo(equipmentInfo);
 
         if (equipmentInfos.size() > 0) {
-            Date alarmUpdate = new Date();
+            Date alarmUpdate = sendEventHistoryQo.getAlarmUpdate();
             EquipmentInfo equipmentInfo1 = equipmentInfos.get(0);
             equipmentInfo1.setAlarmVal(alarmVal);
             equipmentInfo1.setAlarmUpdate(alarmUpdate);
@@ -862,6 +862,7 @@ public class EquipmentInfoServiceImpl implements EquipmentInfoService {
             sensorEvent.setEventDataType(Byte.decode(String.valueOf(equipmentPropertyType)));
             sensorEvent.setEventDataValue(eventValue);
             sensorEvent.setEventTime(alarmUpdate.getTime());
+            System.out.println(TimeUtil.format(alarmUpdate,"yyyy-MM-dd HH:mm:ss"));
             //事件类型
             sensorEvent.setType(Byte.decode(eventType));
             sensorEvent.setOrgCode("");

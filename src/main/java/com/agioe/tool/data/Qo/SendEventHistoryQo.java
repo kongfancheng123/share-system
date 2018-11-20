@@ -2,6 +2,8 @@ package com.agioe.tool.data.Qo;
 
 import lombok.Data;
 
+import java.util.Date;
+
 @Data
 public class SendEventHistoryQo {
     /**
@@ -28,4 +30,8 @@ public class SendEventHistoryQo {
      * 属性类型
      */
     private Integer equipmentPropertyType;
+    /**
+     * 发送事件
+     */
+    private Date alarmUpdate;
 }

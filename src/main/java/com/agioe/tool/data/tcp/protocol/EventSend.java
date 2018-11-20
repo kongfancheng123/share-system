@@ -48,7 +48,7 @@ public class EventSend extends AbstractProtocol {
             //事件码
             bodyBuf.writeShort(event.getEventCode());
             //事件时间(时间戳精确到秒)
-            bodyBuf.writeInt((int) (System.currentTimeMillis() / 1000));
+            bodyBuf.writeInt(event.getEventTime().intValue()/1000);
             //事件数据类型
             bodyBuf.writeByte(event.getEventDataType());
             //数据值长度 与 事件数据
