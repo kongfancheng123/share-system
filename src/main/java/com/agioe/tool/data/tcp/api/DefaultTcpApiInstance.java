@@ -33,7 +33,11 @@ public class DefaultTcpApiInstance implements TcpApi {
             while (true) {
                 List<ControlParameter> controlParameterList = ControlQueue.poll();
                 if (listener != null) {
-                    listener.onControlArrive(controlParameterList);
+                    try {
+                        listener.onControlArrive(controlParameterList);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
                 }
             }
         };

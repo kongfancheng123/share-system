@@ -11,7 +11,7 @@ function start() {
         echo "$APP_NAME is running,pid is $pid"
     else
         echo "Starting $APP_NAME..."
-        nohup java -Dappliction=$APP_NAME -XX:+UseConcMarkSweepGC -Xloggc:../../logs/gc.log -jar ../../*.jar --spring.config.location=../../conf/application.yaml > /dev/null 2>&1 &
+        nohup java -Dappliction=$APP_NAME -XX:+UseConcMarkSweepGC -Xloggc:../../logs/gc.log -jar ../../*.jar --spring.config.location=../../conf/application.yml > /dev/null 2>&1 &
     fi
 }
 
