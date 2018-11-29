@@ -1,12 +1,15 @@
 #!/bin/bash
 
-APP_NAME="data-tool"
+APP_NAME="data-tool-1.0-SNAPSHOT"
 RETVAL="0"
 
 
+BASEDIR=`dirname "$0"`/../..
+BASEDIR=`(cd "$BASEDIR"; pwd)`
+
 
 function start() {
-    pid=$(ps -ef | grep -v 'grep' | egrep $APP_NAME| awk '{printf $2 " "}')
+    pid=`ps -ef | grep java | grep "$BASEDIR" |awk '{print $2}'`
     if [ "$pid" != "" ]; then
         echo "$APP_NAME is running,pid is $pid"
     else
@@ -35,7 +38,7 @@ function stop() {
 
 function status()
 {
-    pid=$(ps -ef | grep -v 'grep' | egrep $APP_NAME| awk '{printf $2 " "}')
+    pid=`ps -ef | grep java | grep "$BASEDIR" |awk '{print $2}'`
     if [ "$pid" != "" ]; then
         echo "$APP_NAME is running,pid is $pid"
     else

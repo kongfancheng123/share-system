@@ -1,8 +1,8 @@
 server:
-  port: 8080
+  port: 8088
 spring:
   datasource:
-    url: jdbc:postgresql://192.168.52.77:5432/data_tool
+    url: jdbc:postgresql://192.168.52.12:5432/data_tool
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
