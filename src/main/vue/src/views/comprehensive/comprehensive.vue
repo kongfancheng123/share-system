@@ -135,7 +135,7 @@
         <template slot-scope="scope">
           
           <el-button size="mini"
-                     v-if='!alarmEnableFalg&&!scope.row.alarmVal&&scope.row.equipmentPropertyType===2?true:false'
+                     v-if='!alarmEnableFalg&&!scope.row.alarmVal&&scope.row.equipmentPropertyType===0?true:false'
                      @click="warnEvent(scope.$index, scope.row,'发送报警',0)">发送报警</el-button>
 
           <el-button size="mini"
