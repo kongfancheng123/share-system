@@ -133,13 +133,18 @@
 
       <el-table-column label="操作">
         <template slot-scope="scope">
+          
           <el-button size="mini"
-                     :disabled="alarmEnableFalg||scope.row.alarmVal===null||scope.row.alarmVal===''?false:true"
-                     @click="warnEvent(scope.$index, scope.row)">发送报警</el-button>
+                     v-if='!alarmEnableFalg&&!scope.row.alarmVal&&scope.row.equipmentPropertyType===1?true:false'
+                     @click="warnEvent(scope.$index, scope.row,'发送报警',0)">发送报警</el-button>
+
+          <el-button size="mini"
+                     v-if="!alarmEnableFalg&&!scope.row.alarmVal&&scope.row.equipmentPropertyName==='故障状态'?true:false"
+                     @click="warnEvent(scope.$index, scope.row,'发送故障',1)">发送故障</el-button>
 
           <el-button size="mini"
                      type="danger"
-                     :disabled="scope.row.alarmVal===''||scope.row.alarmVal===null?true:false"
+                     v-if="!alarmEnableFalg&&!!scope.row.alarmVal&&scope.row.equipmentPropertyName==='故障状态'?true:false"
                      @click="troublesHootingEvent(scope.$index, scope.row)">解除故障</el-button>
         </template>
       </el-table-column>
@@ -222,7 +227,7 @@
     </el-dialog>
 
     <!--弹出层：报警发送 -->
-    <el-dialog title="发送报警"
+    <el-dialog :title="title"
                width="600px"
                :visible.sync="dialog.warnFlag">
       <el-form :model="formWarn"
@@ -234,6 +239,7 @@
         <el-form-item label="事件类型"
                       prop="eventType">
           <el-select v-model="formWarn.eventType"
+                       disabled
                      placeholder="请选择事件类型">
             <el-option v-for="item in eventList"
                        :key="item.value"
@@ -337,6 +343,7 @@ export default {
         warnFlag: false,
         troubleshootingFlag: false
       },
+      title: null,
       // 停止进程
       threadName: null,
       // 数据使能
@@ -583,8 +590,6 @@ export default {
           vm.formPage.parentNodeCode = vm.parentNodeList[0].parentNodeCode
           vm.formPage.equipmentType = vm.equipmentTypeList[0].equipmentTypeCode
 
-          console.log(vm.formSearch)
-
           vm.isSendFlagEvnt()
           vm.getPageData()
         })
@@ -618,7 +623,6 @@ export default {
         .then(response => {
           vm.tableData = response.data.data.items
           vm.totalPage = response.data.data.totalNum
-          console.log(response)
           vm.pollingEvent()
         })
         .catch(error => {
@@ -631,7 +635,6 @@ export default {
       let vm = this
       vm.$refs.formSearch.validate(valid => {
         if (valid) {
-          console.log(vm.formSearch)
           vm.formPage = { ...vm.formSearch }
           vm.getPageData()
         } else {
@@ -756,11 +759,14 @@ export default {
     02: warnEvent 弹窗
     03：warnSumit 提交发送报警表单
    */
-    warnEvent(index, row) {
+    warnEvent(index, row, txt, num) {
       let vm = this
+      vm.title = txt
       vm.formWarn.keyword = row.keyword
       vm.formWarn.parentNodeCode = row.parentNodeCode
       vm.formWarn.equipmentPropertyType = row.equipmentPropertyType
+      vm.formWarn.eventType = num
+
       // 0:遥测 1:遥信 不是这两个，则不能发送
       if (row.equipmentPropertyType > 1) {
         vm.$message.error('该设备信号类型，不允许发送报警')
@@ -768,6 +774,7 @@ export default {
       }
       vm.dialog.warnFlag = true
     },
+
     warnSumit(formName) {
       let vm = this
       vm.$refs[formName].validate(valid => {
