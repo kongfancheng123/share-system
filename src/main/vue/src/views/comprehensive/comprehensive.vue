@@ -133,9 +133,9 @@
 
       <el-table-column label="操作">
         <template slot-scope="scope">
-          
+
           <el-button size="mini"
-                     v-if='!alarmEnableFalg&&scope.row.equipmentPropertyType===0?true:false'
+                     v-if='!alarmEnableFalg&&(scope.row.equipmentPropertyType===0?true:false ||scope.row.equipmentPropertyName==="报警状态"?true:false)'
                      @click="warnEvent(scope.$index, scope.row,'发送报警',0)">发送报警</el-button>
 
           <el-button size="mini"
@@ -239,7 +239,7 @@
         <el-form-item label="事件类型"
                       prop="eventType">
           <el-select v-model="formWarn.eventType"
-                       disabled
+                     disabled
                      placeholder="请选择事件类型">
             <el-option v-for="item in eventList"
                        :key="item.value"
@@ -843,8 +843,7 @@ export default {
     let vm = this
     clearTimeout(vm.pollingNum)
   }
-}
-</script>
+}</script>
 
 
 <style scoped lang="scss">
