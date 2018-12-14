@@ -646,7 +646,7 @@ public class EquipmentInfoServiceImpl implements EquipmentInfoService {
 
                 } else if (equipmentPropertyType == 1) {
                     //判断是否为0或者1
-                    boolean is0Or1 = baseValue.equals("0") || baseValue.equals("1");
+                    boolean is0Or1 = baseValue.equals("0") || baseValue.equals("1")||baseValue.equals("-1");
                     boolean is0Or2 = upAndDown.equals("0") || upAndDown.equals("1");
                     if (!(is0Or1 && is0Or2)) {
                         logger.error("参数类型错误,基础值和浮动只能为0或者1");
