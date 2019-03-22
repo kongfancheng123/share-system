@@ -1,11 +1,11 @@
-# 数据模拟工具(data-tool)
+# 资源共享平台(share-system)
 
 
 
 
 ## 介绍
 
-data-tool是一套基于Spring Boot/Netty/Vue/PostgreSql实现的数据模拟工具,功能包含模拟实时数据,实时事件,响应控制命令
+share-system是一套基于Spring Boot/Netty/Vue/PostgreSql实现的数据模拟工具,功能包含模拟实时数据,实时事件,响应控制命令
 
 ## 打包
 
