@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.agioe.tool</groupId>
-    <artifactId>data-tool</artifactId>
+    <groupId>com.share.system</groupId>
+    <artifactId>share-system</artifactId>
     <version>1.0-SNAPSHOT</version>
 
 
@@ -42,9 +42,8 @@
 
         <!-- 数据库 start-->
         <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>${postgresql.jdbc}</version>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
             <scope>runtime</scope>
         </dependency>
 
@@ -71,11 +70,11 @@
         </dependency>
 
 
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-all</artifactId>
-            <version>4.0.27.Final</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>io.netty</groupId>-->
+            <!--<artifactId>netty-all</artifactId>-->
+            <!--<version>4.0.27.Final</version>-->
+        <!--</dependency>-->
         <!--mybatis begin -->
 
         <dependency>

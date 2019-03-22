@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.share.system.data.dao.LeaguerInfoDao">
+    <resultMap id="BaseResultMap" type="com.share.system.data.entity.LeaguerInfo">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="leaguer_code" jdbcType="VARCHAR" property="leaguerCode"/>
+        <result column="leaguer_name" jdbcType="VARCHAR" property="leaguerName"/>
+        <result column="password" jdbcType="VARCHAR" property="password"/>
+        <result column="is_super_user" jdbcType="INTEGER" property="isSuperUser"/>
+        <result column="recent_appointment_time" jdbcType="TIMESTAMP" property="recentAppointmentTime"/>
+        <result column="recent_lease_time" jdbcType="TIMESTAMP" property="recentLeaseTime"/>
+    </resultMap>
+
+    <insert id="insertLeaguerInfo" parameterType="com.share.system.data.entity.LeaguerInfo">
+         insert into ss_leaguer_info
+        (
+        leaguer_code,
+        leaguer_name,
+        password,
+        is_super_user
+        )values
+            (
+            #{leaguerInfo.leaguerCode},
+            #{leaguerInfo.leaguerName},
+            #{leaguerInfo.password},
+            #{leaguerInfo.isSuperUser}
+            )
+    </insert>
+
+    <delete id="deleteLeaguerInfo" parameterType="integer">
+        delete from ss_leaguer_info
+        where id=#{id}
+    </delete>
+
+    <select id="selectByLeaguerInfo" parameterType="com.share.system.data.entity.LeaguerInfo"
+            resultMap="BaseResultMap">
+        select *
+        from ss_leaguer_info
+        where 1=1
+        <if test="leaguerInfo.id != null">
+            and id = #{leaguerInfo.id}
+        </if>
+        <if test="leaguerInfo.leaguerCode != null">
+            and leaguer_code = #{leaguerInfo.leaguerCode}
+        </if>
+        <if test="leaguerInfo.leaguerName != null">
+            and leaguer_name = #{leaguerInfo.leaguerName}
+        </if>
+        <if test="leaguerInfo.password != null">
+            and password = #{leaguerInfo.password}
+        </if>
+        <if test="leaguerInfo.isSuperUser != null">
+            and is_super_user = #{leaguerInfo.isSuperUser}
+        </if>
+        <if test="leaguerInfo.recentAppointmentTime != null">
+            and recent_appointment_time = #{leaguerInfo.recentAppointmentTime}
+        </if>
+        <if test="leaguerInfo.recentLeaseTime != null">
+            and recent_lease_time = #{leaguerInfo.recentLeaseTime}
+        </if>
+        order by id
+    </select>
+
+    <update id="updateLeaguerInfo" parameterType="com.share.system.data.entity.LeaguerInfo">
+        UPDATE ss_leaguer_info
+        <set>
+            <if test="leaguerInfo.leaguerCode != null">
+                leaguer_code = #{leaguerInfo.leaguerCode},
+            </if>
+            <if test="leaguerInfo.leaguerName != null">
+                leaguer_name = #{leaguerInfo.leaguerName},
+            </if>
+            <if test="leaguerInfo.password != null">
+                password = #{leaguerInfo.password},
+            </if>
+            <if test="leaguerInfo.isSuperUser != null">
+                is_super_user = #{leaguerInfo.isSuperUser},
+            </if>
+            <if test="leaguerInfo.recentAppointmentTime != null">
+                recent_appointment_time = #{leaguerInfo.recentAppointmentTime},
+            </if>
+            <if test="leaguerInfo.recentLeaseTime != null">
+                recent_lease_time = #{leaguerInfo.recentLeaseTime},
+            </if>
+        </set>
+        WHERE id=#{leaguerInfo.id}
+
+    </update>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        select * from ss_leaguer_info
+        order by id
+    </select>
+
+    <select id="selectByid" resultMap="BaseResultMap">
+        select * from ss_leaguer_info
+        where id=#{id}
+    </select>
+
+
+</mapper>
