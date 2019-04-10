@@ -5,7 +5,6 @@
 <mapper namespace="com.share.system.data.dao.LeaguerInfoDao">
     <resultMap id="BaseResultMap" type="com.share.system.data.entity.LeaguerInfo">
         <id column="id" jdbcType="INTEGER" property="id"/>
-        <result column="leaguer_code" jdbcType="VARCHAR" property="leaguerCode"/>
         <result column="leaguer_name" jdbcType="VARCHAR" property="leaguerName"/>
         <result column="password" jdbcType="VARCHAR" property="password"/>
         <result column="is_super_user" jdbcType="INTEGER" property="isSuperUser"/>
@@ -16,13 +15,11 @@
     <insert id="insertLeaguerInfo" parameterType="com.share.system.data.entity.LeaguerInfo">
          insert into ss_leaguer_info
         (
-        leaguer_code,
         leaguer_name,
         password,
         is_super_user
         )values
             (
-            #{leaguerInfo.leaguerCode},
             #{leaguerInfo.leaguerName},
             #{leaguerInfo.password},
             #{leaguerInfo.isSuperUser}
@@ -41,9 +38,6 @@
         where 1=1
         <if test="leaguerInfo.id != null">
             and id = #{leaguerInfo.id}
-        </if>
-        <if test="leaguerInfo.leaguerCode != null">
-            and leaguer_code = #{leaguerInfo.leaguerCode}
         </if>
         <if test="leaguerInfo.leaguerName != null">
             and leaguer_name = #{leaguerInfo.leaguerName}
@@ -66,9 +60,6 @@
     <update id="updateLeaguerInfo" parameterType="com.share.system.data.entity.LeaguerInfo">
         UPDATE ss_leaguer_info
         <set>
-            <if test="leaguerInfo.leaguerCode != null">
-                leaguer_code = #{leaguerInfo.leaguerCode},
-            </if>
             <if test="leaguerInfo.leaguerName != null">
                 leaguer_name = #{leaguerInfo.leaguerName},
             </if>

@@ -1,8 +1,16 @@
 package com.share.system.data.controller;
 
+import com.github.pagehelper.PageHelper;
+import com.share.system.data.Vo.GetresourceInfosByConditionVo;
+import com.share.system.data.entity.LeaguerInfo;
 import com.share.system.data.entity.ResourceInfo;
+import com.share.system.data.entity.TimeQuery;
 import com.share.system.data.entity.WebResponse;
+import com.share.system.data.page.PageBean;
+import com.share.system.data.qo.AppointResourceQo;
+import com.share.system.data.qo.BackResourceQo;
 import com.share.system.data.qo.GetresourceInfosByConditionQo;
+import com.share.system.data.qo.LeaseResourceQo;
 import com.share.system.data.service.LeaguerInfoService;
 import com.share.system.data.service.ResourceInfoService;
 import com.share.system.data.util.TimeUtil;
@@ -43,78 +51,95 @@ public class ResourceInfoController {
     @ResponseBody
     public WebResponse getresourceInfosByCondition(@RequestBody GetresourceInfosByConditionQo getresourceInfosByConditionQo) {
         try {
+            Integer pageNow = getresourceInfosByConditionQo.getPageNow();
+            Integer pageSize = getresourceInfosByConditionQo.getPageSize();
+            Integer countNums = 0;
+            PageHelper.startPage(pageNow, pageSize);
+            TimeQuery timeQuery=new TimeQuery();
+            timeQuery.setStartTime(getresourceInfosByConditionQo.getStartTime());
+            timeQuery.setEndTime(getresourceInfosByConditionQo.getEndTime());
             ResourceInfo resourceInfo=new ResourceInfo();
             List<ResourceInfo> resourceInfos2=new ArrayList<>();
-            if(getresourceInfosByConditionQo.getQuery()==1){//查询租赁
-                resourceInfo.setIsLease(1);
+            List<GetresourceInfosByConditionVo> getresourceInfosByConditionVos=new ArrayList<>();
+            if(getresourceInfosByConditionQo.getState()==2){//查询租赁信息
+                ResourceInfo resourceInfo1=new ResourceInfo();
+                resourceInfo1.setState(2);
+                countNums= resourceInfoService.selectByResourceInfo(resourceInfo1).size();
+                PageHelper.startPage(pageNow, pageSize);
+                List<ResourceInfo> resourceInfos1= resourceInfoService.selectByLeaseTime(timeQuery);
+                resourceInfos2=resourceInfos1;
+
+
+
+            }else if(getresourceInfosByConditionQo.getState()==3){//查询超期信息
+                ResourceInfo resourceInfo1=new ResourceInfo();
+                resourceInfo1.setState(3);
+                countNums= resourceInfoService.selectByResourceInfo(resourceInfo1).size();
+
+                PageHelper.startPage(pageNow, pageSize);
                 List<ResourceInfo> resourceInfos1= resourceInfoService.selectByResourceInfo(resourceInfo);
-                if(getresourceInfosByConditionQo.getStartTime()!=null&&getresourceInfosByConditionQo.getStartTime()!=""&&
-                        getresourceInfosByConditionQo.getEndTime()!=null&&getresourceInfosByConditionQo.getEndTime()!=""){
-                    if(resourceInfos1.size()>0){
-                        for(ResourceInfo resourceInfo1:resourceInfos1){
-                            Date startTime = TimeUtil.stringToDate(getresourceInfosByConditionQo.getStartTime());
-                            Date endTime = TimeUtil.stringToDate(getresourceInfosByConditionQo.getEndTime());
-                            if(resourceInfo1.getLeaseTime().getTime()>=startTime.getTime()&&
-                                    resourceInfo1.getLeaseTime().getTime()<=endTime.getTime()){
-                                resourceInfos2.add(resourceInfo1);
-                            }
-                        }
-                    }
-                }else{
-                    resourceInfos2=resourceInfos1;
-                }
-            }else if(getresourceInfosByConditionQo.getQuery()==2){//查询归还时间
-                resourceInfo.setIsLease(1);
+                resourceInfos2=resourceInfos1;
+            }else if(getresourceInfosByConditionQo.getState()==1){//查询预约信息
+                ResourceInfo resourceInfo1=new ResourceInfo();
+                resourceInfo1.setState(1);
+                countNums= resourceInfoService.selectByResourceInfo(resourceInfo1).size();
+
+                PageHelper.startPage(pageNow, pageSize);
                 List<ResourceInfo> resourceInfos1= resourceInfoService.selectByResourceInfo(resourceInfo);
-                if(getresourceInfosByConditionQo.getStartTime()!=null&&getresourceInfosByConditionQo.getStartTime()!=""&&
-                        getresourceInfosByConditionQo.getEndTime()!=null&&getresourceInfosByConditionQo.getEndTime()!=""){
-                    if(resourceInfos1.size()>0){
-                        for(ResourceInfo resourceInfo1:resourceInfos1){
-                            Date startTime = TimeUtil.stringToDate(getresourceInfosByConditionQo.getStartTime());
-                            Date endTime = TimeUtil.stringToDate(getresourceInfosByConditionQo.getEndTime());
-                            if(resourceInfo1.getBackTime().getTime()>=startTime.getTime()&&
-                                    resourceInfo1.getBackTime().getTime()<=endTime.getTime()){
-                                resourceInfos2.add(resourceInfo1);
-                            }
-                        }
-                    }
-                }else{
-                    resourceInfos2=resourceInfos1;
-                }
-            }else if(getresourceInfosByConditionQo.getQuery()==3){//查询预约时间
-                resourceInfo.setIsAppointment(1);
+                resourceInfos2=resourceInfos1;
+            }else{//查询可预约信息
+                ResourceInfo resourceInfo1=new ResourceInfo();
+                resourceInfo1.setState(0);
+                countNums= resourceInfoService.selectByResourceInfo(resourceInfo1).size();
+                resourceInfo.setState(0);
+                PageHelper.startPage(pageNow, pageSize);
                 List<ResourceInfo> resourceInfos1= resourceInfoService.selectByResourceInfo(resourceInfo);
-                if(getresourceInfosByConditionQo.getStartTime()!=null&&getresourceInfosByConditionQo.getStartTime()!=""&&
-                        getresourceInfosByConditionQo.getEndTime()!=null&&getresourceInfosByConditionQo.getEndTime()!=""){
-                    if(resourceInfos1.size()>0){
-                        for(ResourceInfo resourceInfo1:resourceInfos1){
-                            Date startTime = TimeUtil.stringToDate(getresourceInfosByConditionQo.getStartTime());
-                            Date endTime = TimeUtil.stringToDate(getresourceInfosByConditionQo.getEndTime());
-                            if(resourceInfo1.getAppointmentTime().getTime()>=startTime.getTime()&&
-                                    resourceInfo1.getAppointmentTime().getTime()<=endTime.getTime()){
-                                resourceInfos2.add(resourceInfo1);
-                            }
-                        }
+                resourceInfos2=resourceInfos1;
+            }
+
+            if(resourceInfos2.size()>0){
+                for(ResourceInfo resourceInfo2:resourceInfos2){
+                    GetresourceInfosByConditionVo getresourceInfosByConditionVo=new GetresourceInfosByConditionVo();
+                    getresourceInfosByConditionVo.setId(resourceInfo2.getId());
+                    getresourceInfosByConditionVo.setResourceName(resourceInfo2.getResourceName());
+                    getresourceInfosByConditionVo.setResourceDesc(resourceInfo2.getResourceDesc());
+                    switch (resourceInfo2.getState()) {
+                        case 0:
+                            getresourceInfosByConditionVo.setState("可预约");
+                        case 1:
+                            getresourceInfosByConditionVo.setState("已预约");
+                        case 2:
+                            getresourceInfosByConditionVo.setState("已租赁");
+                        case 3:
+                            getresourceInfosByConditionVo.setState("已超时");
                     }
-                }else{
-                    resourceInfos2=resourceInfos1;
-                }
-            }else{//查询所有超期物资
-                resourceInfo.setIsLease(1);
-                List<ResourceInfo> resourceInfos1= resourceInfoService.selectByResourceInfo(resourceInfo);
-                if(resourceInfos1.size()>0){
-                    for(ResourceInfo resourceInfo1:resourceInfos1){
-                        if(resourceInfo1.getBackTime().getTime()<System.currentTimeMillis()){
-                            resourceInfos2.add(resourceInfo1);
-                        }
+                    if(resourceInfo2.getAppointmentTime()!=null){
+                        getresourceInfosByConditionVo.setAppointmentTime(TimeUtil.format(resourceInfo2.getAppointmentTime(),"yyyy-MM-dd HH:mm:ss"));
                     }
+                    if(resourceInfo2.getLeaseTime()!=null){
+                        getresourceInfosByConditionVo.setLeaseTime(TimeUtil.format(resourceInfo2.getLeaseTime(),"yyyy-MM-dd HH:mm:ss"));
+                    }
+                    if(resourceInfo2.getBackTime()!=null){
+                        getresourceInfosByConditionVo.setBackTime(TimeUtil.format(resourceInfo2.getBackTime(),"yyyy-MM-dd HH:mm:ss"));
+                    }
+                    if(resourceInfo2.getUserId()!=null){
+                        LeaguerInfo leaguerInfo = leaguerInfoService.selectByid(resourceInfo2.getUserId());
+                        getresourceInfosByConditionVo.setUserName(leaguerInfo.getLeaguerName());
+                    }
+                    getresourceInfosByConditionVos.add(getresourceInfosByConditionVo);
+
                 }
             }
-            return WebResponse.success(resourceInfos2);
+
+            PageBean<GetresourceInfosByConditionVo> pageData = new PageBean<>(pageNow, pageSize, countNums);
+            pageData.setItems(getresourceInfosByConditionVos);
+            return WebResponse.success(pageData);
         } catch (Exception e) {
             e.printStackTrace();
             return WebResponse.error(400,"查询失败");
         }
+
+
     }
 
     /**
@@ -123,9 +148,7 @@ public class ResourceInfoController {
     @RequestMapping(value = "/addResource", method = RequestMethod.POST)
     @ResponseBody
     public WebResponse addResource(@RequestBody ResourceInfo resourceInfo) {
-        resourceInfo.setIsLease(0);
-        resourceInfo.setIsOverTime(0);
-        resourceInfo.setIsAppointment(0);
+        resourceInfo.setState(0);
         Integer integer = resourceInfoService.insertResourceInfo(resourceInfo);
         return WebResponse.success();
     }
@@ -143,10 +166,10 @@ public class ResourceInfoController {
     /**
      * 删除物资
      */
-    @RequestMapping(value = "/deleteResource", method = RequestMethod.GET)
+    @RequestMapping(value = "/deleteResource", method = RequestMethod.POST)
     @ResponseBody
-    public WebResponse deleteResource(@RequestParam Integer id) {
-        Integer integer = resourceInfoService.deleteResourceInfo(id);
+    public WebResponse deleteResource(@RequestBody ResourceInfo resourceInfo) {
+        Integer integer = resourceInfoService.deleteResourceInfo(resourceInfo.getId());
         return WebResponse.success();
     }
 
@@ -165,9 +188,12 @@ public class ResourceInfoController {
      */
     @RequestMapping(value = "/appointResource", method = RequestMethod.POST)
     @ResponseBody
-    public WebResponse appointResource(@RequestBody ResourceInfo resourceInfo) {
-        resourceInfo.setIsAppointment(1);
+    public WebResponse appointResource(@RequestBody AppointResourceQo appointResourceQo) {
+        //先查询,再更新
+        ResourceInfo resourceInfo = resourceInfoService.selectByid(appointResourceQo.getId());
+        resourceInfo.setState(1);
         resourceInfo.setAppointmentTime(new Date());
+        resourceInfo.setUserId(appointResourceQo.getUserId());
         Integer integer = resourceInfoService.updateResourceInfo(resourceInfo);
         return WebResponse.success();
     }
@@ -177,11 +203,23 @@ public class ResourceInfoController {
      */
     @RequestMapping(value = "/leaseResource", method = RequestMethod.POST)
     @ResponseBody
-    public WebResponse leaseResource(@RequestBody ResourceInfo resourceInfo) {
-        resourceInfo.setIsLease(1);
-        resourceInfo.setLeaseTime(new Date());
-        Integer integer = resourceInfoService.updateResourceInfo(resourceInfo);
-        return WebResponse.success();
+    public WebResponse leaseResource(@RequestBody LeaseResourceQo leaseResourceQo) {
+        if(leaseResourceQo.getBackTime()!=null){
+            //先查询,再更新
+            ResourceInfo resourceInfo = resourceInfoService.selectByid(leaseResourceQo.getId());
+            resourceInfo.setState(2);
+            resourceInfo.setLeaseTime(new Date());
+            try {
+                resourceInfo.setBackTime(TimeUtil.stringToDate(leaseResourceQo.getBackTime()));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            Integer integer = resourceInfoService.updateResourceInfo(resourceInfo);
+            return WebResponse.success();
+        }else{
+            return WebResponse.error(400,"请选择归还时间");
+        }
+
     }
 
     /**
@@ -190,10 +228,13 @@ public class ResourceInfoController {
     @RequestMapping(value = "/backResource", method = RequestMethod.POST)
     @ResponseBody
     public WebResponse backResource(@RequestBody ResourceInfo resourceInfo) {
-        resourceInfo.setIsOverTime(0);
-        resourceInfo.setIsAppointment(0);
-        resourceInfo.setIsLease(0);
-        Integer integer = resourceInfoService.updateResourceInfo(resourceInfo);
+        ResourceInfo resourceInfo1 = resourceInfoService.selectByid(resourceInfo.getId());
+        resourceInfo1.setBackTime(null);
+        resourceInfo1.setLeaseTime(null);
+        resourceInfo1.setUserId(null);
+        resourceInfo1.setState(0);
+        resourceInfo1.setAppointmentTime(null);
+        Integer integer = resourceInfoService.backResource(resourceInfo1);
         return WebResponse.success();
     }
 

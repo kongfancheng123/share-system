@@ -5,32 +5,26 @@
 <mapper namespace="com.share.system.data.dao.ResourceInfoDao">
     <resultMap id="BaseResultMap" type="com.share.system.data.entity.ResourceInfo">
         <id column="id" jdbcType="INTEGER" property="id"/>
-        <result column="resource_code" jdbcType="VARCHAR" property="resourceCode"/>
         <result column="resource_name" jdbcType="VARCHAR" property="resourceName"/>
-        <result column="is_appointment" jdbcType="INTEGER" property="isAppointment"/>
+        <result column="resource_desc" jdbcType="VARCHAR" property="resourceDesc"/>
         <result column="appointment_time" jdbcType="TIMESTAMP" property="appointmentTime"/>
-        <result column="is_lease" jdbcType="INTEGER" property="isLease"/>
         <result column="lease_time" jdbcType="TIMESTAMP" property="leaseTime"/>
         <result column="back_time" jdbcType="TIMESTAMP" property="backTime"/>
-        <result column="is_over_time" jdbcType="INTEGER" property="isOverTime"/>
+        <result column="state" jdbcType="INTEGER" property="state"/>
         <result column="user_id" jdbcType="INTEGER" property="userId"/>
     </resultMap>
 
     <insert id="insertResourceInfo" parameterType="com.share.system.data.entity.ResourceInfo">
          insert into ss_resource_info
         (
-        resource_code,
         resource_name,
-        is_appointment,
-        is_lease,
-        is_over_time
+        resource_desc,
+        state
         )values
             (
-            #{resourceInfo.resourceCode},
             #{resourceInfo.resourceName},
-            #{resourceInfo.isAppointment},
-            #{resourceInfo.isLease},
-            #{resourceInfo.isOverTime}
+            #{resourceInfo.resourceDesc},
+            #{resourceInfo.state}
             )
     </insert>
 
@@ -47,20 +41,14 @@
         <if test="resourceInfo.id != null">
             and id = #{resourceInfo.id}
         </if>
-        <if test="resourceInfo.resourceCode != null">
-            and resource_code = #{resourceInfo.resourceCode}
-        </if>
         <if test="resourceInfo.resourceName != null">
             and resource_name = #{resourceInfo.resourceName}
         </if>
-        <if test="resourceInfo.isAppointment != null">
-            and is_appointment = #{resourceInfo.isAppointment}
+        <if test="resourceInfo.resourceDesc != null">
+            and resource_desc = #{resourceInfo.resourceDesc}
         </if>
         <if test="resourceInfo.appointmentTime != null">
             and appointment_time = #{resourceInfo.appointmentTime}
-        </if>
-        <if test="resourceInfo.isLease != null">
-            and is_lease = #{resourceInfo.isLease}
         </if>
         <if test="resourceInfo.leaseTime != null">
             and lease_time = #{resourceInfo.leaseTime}
@@ -68,8 +56,8 @@
         <if test="resourceInfo.backTime != null">
             and back_time = #{resourceInfo.backTime}
         </if>
-        <if test="resourceInfo.isOverTime != null">
-            and is_over_time = #{resourceInfo.isOverTime}
+        <if test="resourceInfo.state != null">
+            and state = #{resourceInfo.state}
         </if>
         <if test="resourceInfo.userId != null">
             and user_id = #{resourceInfo.userId}
@@ -80,20 +68,14 @@
     <update id="updateResourceInfo" parameterType="com.share.system.data.entity.ResourceInfo">
         UPDATE ss_resource_info
         <set>
-            <if test="resourceInfo.resourceCode != null">
-                resource_code = #{resourceInfo.resourceCode},
-            </if>
             <if test="resourceInfo.resourceName != null">
                 resource_name = #{resourceInfo.resourceName},
             </if>
-            <if test="resourceInfo.isAppointment != null">
-                is_appointment = #{resourceInfo.isAppointment},
+            <if test="resourceInfo.resourceDesc != null">
+                resource_desc = #{resourceInfo.resourceDesc},
             </if>
             <if test="resourceInfo.appointmentTime != null">
                 appointment_time = #{resourceInfo.appointmentTime},
-            </if>
-            <if test="resourceInfo.isLease != null">
-                is_lease = #{resourceInfo.isLease},
             </if>
             <if test="resourceInfo.leaseTime != null">
                 lease_time = #{resourceInfo.leaseTime},
@@ -101,8 +83,8 @@
             <if test="resourceInfo.backTime != null">
                 back_time = #{resourceInfo.backTime},
             </if>
-            <if test="resourceInfo.isOverTime != null">
-                is_over_time = #{resourceInfo.isOverTime},
+            <if test="resourceInfo.state != null">
+                state = #{resourceInfo.state},
             </if>
             <if test="resourceInfo.userId != null">
                 user_id = #{resourceInfo.userId},
@@ -122,5 +104,55 @@
         where id=#{id}
     </select>
 
+    <select id="selectByLeaseTime"  parameterType="com.share.system.data.entity.TimeQuery"
+            resultMap="BaseResultMap">
+        select * from ss_resource_info
+        where state=2
+        <if test="timeQuery.startTime != null">
+            and lease_time >= #{timeQuery.startTime}
+        </if>
+        <if test="timeQuery.endTime != null">
+            and lease_time  &lt; #{timeQuery.endTime}
+        </if>
+    </select>
+
+    <select id="selectByAppointmentTime"  parameterType="com.share.system.data.entity.TimeQuery"
+            resultMap="BaseResultMap">
+        select * from ss_resource_info
+        where state=1
+        <if test="timeQuery.startTime != null">
+            and appointment_time >= #{timeQuery.startTime}
+        </if>
+        <if test="timeQuery.endTime != null">
+            and appointment_time &lt;= #{timeQuery.endTime}
+        </if>
+    </select>
+
+    <select id="selectByBackTime"  parameterType="com.share.system.data.entity.TimeQuery"
+            resultMap="BaseResultMap">
+        select * from ss_resource_info
+        where state=3
+        <if test="timeQuery.startTime != null">
+            and back_time >= #{timeQuery.startTime}
+        </if>
+        <if test="timeQuery.endTime != null">
+            and back_time &lt;= #{timeQuery.endTime}
+        </if>
+    </select>
+
+    <update id="backResource" parameterType="com.share.system.data.entity.ResourceInfo">
+        UPDATE ss_resource_info
+        <set>
+                resource_name = #{resourceInfo.resourceName},
+                resource_desc = #{resourceInfo.resourceDesc},
+                appointment_time = #{resourceInfo.appointmentTime},
+                lease_time = #{resourceInfo.leaseTime},
+                back_time = #{resourceInfo.backTime},
+                state = #{resourceInfo.state},
+                user_id = #{resourceInfo.userId},
+        </set>
+        WHERE id=#{resourceInfo.id}
+
+    </update>
 
 </mapper>

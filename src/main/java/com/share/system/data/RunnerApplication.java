@@ -2,10 +2,7 @@ package com.share.system.data;
 
 import com.github.pagehelper.PageHelper;
 import org.mybatis.spring.annotation.MapperScan;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.Banner;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -13,33 +10,35 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
-import java.util.Properties;
 
+import java.util.Properties;
 
 
 @SpringBootApplication
 @EnableScheduling
 @EnableWebSocketMessageBroker
 @MapperScan("com.share.system.data.dao")
-public class DataToolApplication implements CommandLineRunner {
-
-    private Logger logger = LoggerFactory.getLogger(DataToolApplication.class);
-
+public class RunnerApplication implements CommandLineRunner {
 
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
-
     public static void main(String[] args) {
-        SpringApplication application = new SpringApplication(DataToolApplication.class);
-        application.setBannerMode(Banner.Mode.OFF);
+        SpringApplication application = new SpringApplication(RunnerApplication.class);
         application.run(args);
     }
 
-
     @Override
     public void run(String... args) throws Exception {
-
+        Runnable runnable = () -> {
+            while (true) {
+                try {
+                   Thread.sleep(20000);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
     }
 
 

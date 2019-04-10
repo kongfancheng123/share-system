@@ -11,10 +11,6 @@ public class LeaguerInfo {
      */
     private Integer id;
     /**
-     * 会员编码
-     */
-    private String leaguerCode;
-    /**
      * 会员名称
      */
     private String leaguerName;

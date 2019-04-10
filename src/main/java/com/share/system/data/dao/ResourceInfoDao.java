@@ -1,6 +1,7 @@
 package com.share.system.data.dao;
 
 import com.share.system.data.entity.ResourceInfo;
+import com.share.system.data.entity.TimeQuery;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -50,4 +51,27 @@ public interface ResourceInfoDao {
      * 根据id进行查找
      */
     ResourceInfo selectByid(Integer id);
+
+    /**
+    * 根据租赁时间查询
+    */
+    List<ResourceInfo> selectByLeaseTime(@Param("timeQuery")TimeQuery timeQuery);
+
+    /**
+     * 根据预约时间查询
+     */
+    List<ResourceInfo> selectByAppointmentTime(@Param("timeQuery")TimeQuery timeQuery);
+
+    /**
+     * 根据超期时间查询
+     */
+    List<ResourceInfo> selectByBackTime(@Param("timeQuery")TimeQuery timeQuery);
+
+    /**
+     * 归还
+     *
+     * @param resourceInfo
+     * @return
+     */
+    Integer backResource(@Param("resourceInfo") ResourceInfo resourceInfo);
 }

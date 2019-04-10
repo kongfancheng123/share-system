@@ -1,11 +1,17 @@
 package com.share.system.data.controller;
 
+import com.github.pagehelper.PageHelper;
+import com.share.system.data.Vo.GetLeaguersByLeaguerInfoVo;
 import com.share.system.data.entity.LeaguerInfo;
 import com.share.system.data.entity.WebResponse;
+import com.share.system.data.page.PageBean;
+import com.share.system.data.qo.GetLeaguersByLeaguerInfoQo;
 import com.share.system.data.service.LeaguerInfoService;
+import com.share.system.data.util.TimeUtil;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -26,10 +32,11 @@ public class LeaguerInfoController {
     public WebResponse login(@RequestBody LeaguerInfo leaguerInfo) {
         List<LeaguerInfo> leaguerInfos = leaguerInfoService.selectByLeaguerInfo(leaguerInfo);
         if(leaguerInfos.size()>0){
-            return WebResponse.success();
+            return WebResponse.success(leaguerInfos.get(0));
         }else{
             return WebResponse.error(400,"用户名或者密码错误");
         }
+
     }
 
     /**
@@ -53,13 +60,36 @@ public class LeaguerInfoController {
     }
 
     /**
-     * 查找所有会员
+     * 条件查找所有会员
      */
-    @RequestMapping(value = "/getLeaguers", method = RequestMethod.GET)
+    @RequestMapping(value = "/getLeaguersByLeaguerInfo", method = RequestMethod.POST)
     @ResponseBody
-    public WebResponse getLeaguers() {
-        List<LeaguerInfo> leaguerInfos = leaguerInfoService.selectAll();
-        return WebResponse.success(leaguerInfos);
+    public WebResponse getLeaguersByLeaguerInfo(@RequestBody GetLeaguersByLeaguerInfoQo getLeaguersByLeaguerInfoQo) {
+        Integer pageNow = getLeaguersByLeaguerInfoQo.getPageNow();
+        Integer pageSize = getLeaguersByLeaguerInfoQo.getPageSize();
+        Integer countNums = leaguerInfoService.selectAll().size();
+        LeaguerInfo leaguerInfo=new LeaguerInfo();
+        leaguerInfo.setIsSuperUser(0);
+        leaguerInfo.setLeaguerName(getLeaguersByLeaguerInfoQo.getLeaguerName());
+        PageHelper.startPage(pageNow, pageSize);
+        List<LeaguerInfo> leaguerInfos = leaguerInfoService.selectByLeaguerInfo(leaguerInfo);
+        List<GetLeaguersByLeaguerInfoVo> getLeaguersByLeaguerInfoVos=new ArrayList<>();
+        if(leaguerInfos.size()>0){
+            for(LeaguerInfo leaguerInfo1:leaguerInfos){
+                GetLeaguersByLeaguerInfoVo getLeaguersByLeaguerInfoVo=new GetLeaguersByLeaguerInfoVo();
+                getLeaguersByLeaguerInfoVo.setId(leaguerInfo1.getId());
+                getLeaguersByLeaguerInfoVo.setLeaguerName(leaguerInfo1.getLeaguerName());
+                getLeaguersByLeaguerInfoVo.setPassword(leaguerInfo1.getPassword());
+                getLeaguersByLeaguerInfoVo.setRecentAppointmentTime(TimeUtil.format(leaguerInfo1.getRecentAppointmentTime(),"yyyy-MM-dd HH:mm:ss"));
+                getLeaguersByLeaguerInfoVo.setRecentLeaseTime(TimeUtil.format(leaguerInfo1.getRecentLeaseTime(),"yyyy-MM-dd HH:mm:ss"));
+                getLeaguersByLeaguerInfoVos.add(getLeaguersByLeaguerInfoVo);
+            }
+        }
+        PageBean<GetLeaguersByLeaguerInfoVo> pageData = new PageBean<>(pageNow, pageSize, countNums);
+        pageData.setItems(getLeaguersByLeaguerInfoVos);
+
+        return WebResponse.success(pageData);
+
     }
 
     /**
@@ -85,10 +115,10 @@ public class LeaguerInfoController {
     /**
      * 删除会员
      */
-    @RequestMapping(value = "/deleteLeaguer", method = RequestMethod.GET)
+    @RequestMapping(value = "/deleteLeaguer", method = RequestMethod.POST)
     @ResponseBody
-    public WebResponse deleteLeaguer(@RequestParam Integer id) {
-        Integer integer = leaguerInfoService.deleteLeaguerInfo(id);
+    public WebResponse deleteLeaguer(@RequestBody LeaguerInfo leaguerInfo) {
+        Integer integer = leaguerInfoService.deleteLeaguerInfo(leaguerInfo.getId());
         return WebResponse.success();
     }
 }

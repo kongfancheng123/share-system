@@ -42,11 +42,11 @@ module.exports = {
 
   // 配置 webpack-dev-server 行为
   devServer: {
-    port: 9008, // 端口
+    port: 9009, // 端口
     // host: '',
-    host: '192.168.50.79', // IP
+    host: '192.168.10.117', // IP
     open: true, // 自动打开浏览器
-    proxy: 'http://192.168.50.79:8080'
+    proxy: 'http://192.168.10.117:8099'
     // proxy: {
     //   '/api': {
     //     target: 'http://192.168.52.50:8080',

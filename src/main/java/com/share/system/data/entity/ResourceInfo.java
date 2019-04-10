@@ -11,25 +11,17 @@ public class ResourceInfo {
      */
     private Integer id;
     /**
-     * 资源编码
-     */
-    private String resourceCode;
-    /**
      * 资源名称
      */
     private String resourceName;
     /**
-     * 是否被预约
+     * 资源描述
      */
-    private Integer isAppointment;
+    private String resourceDesc;
     /**
      * 预约时间
      */
     private Date appointmentTime;
-    /**
-     * 是否被租赁
-     */
-    private Integer isLease;
     /**
      * 被租赁时间
      */
@@ -39,9 +31,9 @@ public class ResourceInfo {
      */
     private Date backTime;
     /**
-     * 是否超期
+     * 状态,0是无状态(同样表示已归还,状态清零),1是被预约,2是被租赁,3是已超期
      */
-    private Integer isOverTime;
+    private Integer state;
     /**
      * 操作人id
      */
