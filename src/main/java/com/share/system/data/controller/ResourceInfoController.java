@@ -211,6 +211,9 @@ public class ResourceInfoController {
         resourceInfo.setAppointmentTime(new Date());
         resourceInfo.setUserId(appointResourceQo.getUserId());
         Integer integer = resourceInfoService.updateResourceInfo(resourceInfo);
+        LeaguerInfo leaguerInfo = leaguerInfoService.selectByid(appointResourceQo.getUserId());
+        leaguerInfo.setRecentAppointmentTime(new Date());
+        leaguerInfoService.updateLeaguerInfo(leaguerInfo);
         return WebResponse.success();
     }
 
@@ -231,6 +234,9 @@ public class ResourceInfoController {
                 e.printStackTrace();
             }
             Integer integer = resourceInfoService.updateResourceInfo(resourceInfo);
+            LeaguerInfo leaguerInfo = leaguerInfoService.selectByid(resourceInfo.getUserId());
+            leaguerInfo.setRecentLeaseTime(new Date());
+            leaguerInfoService.updateLeaguerInfo(leaguerInfo);
             return WebResponse.success();
         }else{
             return WebResponse.error(400,"请选择归还时间");
