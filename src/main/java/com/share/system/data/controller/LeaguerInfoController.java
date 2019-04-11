@@ -48,6 +48,7 @@ public class LeaguerInfoController {
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     @ResponseBody
     public WebResponse register(@RequestBody LeaguerInfo leaguerInfo) {
+        leaguerInfo.setIsSuperUser(0);
         LeaguerInfo leaguerInfo1=new LeaguerInfo();
         leaguerInfo1.setLeaguerName(leaguerInfo.getLeaguerName());
         List<LeaguerInfo> leaguerInfos = leaguerInfoService.selectByLeaguerInfo(leaguerInfo1);
@@ -67,10 +68,12 @@ public class LeaguerInfoController {
     public WebResponse getLeaguersByLeaguerInfo(@RequestBody GetLeaguersByLeaguerInfoQo getLeaguersByLeaguerInfoQo) {
         Integer pageNow = getLeaguersByLeaguerInfoQo.getPageNow();
         Integer pageSize = getLeaguersByLeaguerInfoQo.getPageSize();
-        Integer countNums = leaguerInfoService.selectAll().size();
+        LeaguerInfo leaguerInfo8=new LeaguerInfo();
+        leaguerInfo8.setIsSuperUser(0);
+        Integer countNums = leaguerInfoService.selectByLeaguerInfo(leaguerInfo8).size();
         LeaguerInfo leaguerInfo=new LeaguerInfo();
         leaguerInfo.setIsSuperUser(0);
-        leaguerInfo.setLeaguerName(getLeaguersByLeaguerInfoQo.getLeaguerName());
+        leaguerInfo.setLeaguerName(getLeaguersByLeaguerInfoQo.getLeaguerName()==""?null:getLeaguersByLeaguerInfoQo.getLeaguerName());
         PageHelper.startPage(pageNow, pageSize);
         List<LeaguerInfo> leaguerInfos = leaguerInfoService.selectByLeaguerInfo(leaguerInfo);
         List<GetLeaguersByLeaguerInfoVo> getLeaguersByLeaguerInfoVos=new ArrayList<>();
@@ -80,8 +83,12 @@ public class LeaguerInfoController {
                 getLeaguersByLeaguerInfoVo.setId(leaguerInfo1.getId());
                 getLeaguersByLeaguerInfoVo.setLeaguerName(leaguerInfo1.getLeaguerName());
                 getLeaguersByLeaguerInfoVo.setPassword(leaguerInfo1.getPassword());
-                getLeaguersByLeaguerInfoVo.setRecentAppointmentTime(TimeUtil.format(leaguerInfo1.getRecentAppointmentTime(),"yyyy-MM-dd HH:mm:ss"));
-                getLeaguersByLeaguerInfoVo.setRecentLeaseTime(TimeUtil.format(leaguerInfo1.getRecentLeaseTime(),"yyyy-MM-dd HH:mm:ss"));
+                if(leaguerInfo1.getRecentAppointmentTime()!=null){
+                    getLeaguersByLeaguerInfoVo.setRecentAppointmentTime(TimeUtil.format(leaguerInfo1.getRecentAppointmentTime(),"yyyy-MM-dd HH:mm:ss"));
+                }
+                if(leaguerInfo1.getRecentLeaseTime()!=null){
+                    getLeaguersByLeaguerInfoVo.setRecentLeaseTime(TimeUtil.format(leaguerInfo1.getRecentLeaseTime(),"yyyy-MM-dd HH:mm:ss"));
+                }
                 getLeaguersByLeaguerInfoVos.add(getLeaguersByLeaguerInfoVo);
             }
         }

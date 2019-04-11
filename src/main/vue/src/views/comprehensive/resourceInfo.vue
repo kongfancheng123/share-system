@@ -503,6 +503,7 @@ export default {
           let vm = this
            AJAX.deleteResource.r({id:row.id}).then(res=>{
             console.log(res)
+            vm.getPageData()
            })
         },
 
@@ -511,6 +512,7 @@ export default {
           let vm = this
            AJAX.copyResource.r({resourceName:row.resourceName,resourceDesc:row.resourceDesc}).then(res=>{
             console.log(res)
+            vm.getPageData()
            })
         },
 

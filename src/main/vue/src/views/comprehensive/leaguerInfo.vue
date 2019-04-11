@@ -387,7 +387,7 @@ export default {
 
 
 
-    /* 更新赛事
+    /* 更新会员
     02: warnEvent 弹窗
    */
     warnEvent(index, row, txt, num) {
@@ -400,7 +400,7 @@ export default {
       // 0:遥测 1:遥信 不是这两个，则不能发送
       vm.dialog.warnFlag = true
     },
-    /* 更新用户
+    /* 更新会员
        03：warnSumit 提交发送报警表单
       */
     warnSumit(formName) {
@@ -414,7 +414,7 @@ export default {
       })
     },
 
-    /*添加赛事 */
+    /*添加会员 */
     addLeaguerInfo(formName) {
           let vm = this
           vm.$refs[formName].validate(valid => {
@@ -426,11 +426,12 @@ export default {
           })
         },
 
-    /*删除赛事 */
+    /*删除会员 */
     deleteUser(index, row, txt, num) {
           let vm = this
            AJAX.deleteUser.r({id:row.id}).then(res=>{
             console.log(res)
+            vm.getPageData()
            })
         },
 

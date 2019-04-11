@@ -94,7 +94,7 @@
                                       label="操作人姓名">
           </el-table-column>
 
-      <el-table-column   v-if='user.isSuperUser===1'  label="操作">
+      <el-table-column     label="操作">
         <template slot-scope="scope">
 
           <el-button size="mini"  v-if='(scope.row.state==="已租赁"||scope.row.state==="已超时")&&(user.leaguerName===scope.row.userName)'
@@ -470,7 +470,7 @@ export default {
 
 
 
-    /* 更新资源
+    /* 租赁资源
     02: warnEvent 弹窗
    */
     warnEvent(index, row, txt, num) {
@@ -485,7 +485,7 @@ export default {
       // 0:遥测 1:遥信 不是这两个，则不能发送
       vm.dialog.warnFlag = true
     },
-    /* 更新资源
+    /* 租赁资源
        03：warnSumit 提交发送报警表单
       */
     warnSumit(formName) {
@@ -516,11 +516,7 @@ export default {
           let vm = this
            AJAX.appointResource.r({id:row.id,userId:vm.user.id}).then(res=>{
             console.log(res)
-             if(res.data.code===200){
-                   vm.$message.success("预约成功,请重新查询")
-               }else{
-                   vm.$message.error(res.data.message)
-              }
+             vm.getPageData()
            })
         },
     /*归还资源 */
@@ -528,11 +524,7 @@ export default {
           let vm = this
            AJAX.backResource.r({id:row.id}).then(res=>{
             console.log(res.data.code)
-            if(res.data.code===200){
-                vm.$message.success("归还成功,请重新查询")
-            }else{
-                vm.$message.error(res.data.message)
-            }
+            vm.getPageData()
 
            })
         },

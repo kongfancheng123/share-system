@@ -2,9 +2,8 @@
   <el-container>
     <!-- el-header -->
     <el-header>
-      <img src="@/assets/logo.png"
-           width="300">
-      <span>ATM8000</span>数据模拟平台
+
+      <span>共享平台</span>
     </el-header>
     <router-view></router-view>
     <!-- el-main -->
@@ -90,7 +89,15 @@ export default {
                         console.log(JSON.stringify(data))
                        vm.setCookie('user',JSON.stringify(data))
                        // 密码账号正确，跳转内页
-                      vm.$router.push({ path: '/resourceInfo' })
+                       console.log(res.data.data)
+                       console.log(res.data.code)
+                       console.log(res.data.isSuperUser)
+                       if(res.data.data.isSuperUser===1){
+                            vm.$router.push({ path: '/resourceInfo' })
+                       }else{
+                            vm.$router.push({ path: '/resourceInfo1' })
+                       }
+
                    }else{
                         vm.$message.error("用户名或密码错误")
                    }
@@ -115,7 +122,7 @@ export default {
           let vm = this
           vm.$refs[formName].validate(valid => {
             if (valid) {
-                AJAX.addUser.r({userName:vm.formLogin.name,password:vm.formLogin.pass}).then(res=>{
+                AJAX.addLeaguerInfo.r({leaguerName:vm.formLogin.name,password:vm.formLogin.pass}).then(res=>{
                        console.log(res.data.code)
                        if(res.data.code===200){
                             // 密码账号正确，跳转内页

@@ -156,7 +156,7 @@
     </profiles>
 
     <build>
-        <finalName>data-tool-${project.version}</finalName>
+        <finalName>share-system-${project.version}</finalName>
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
@@ -202,7 +202,7 @@
                     <archive>
                         <manifest>
                             <!--指定main入口-->
-                            <mainClass>com.agioe.tool.data.DataToolApplication</mainClass>
+                            <mainClass>com.share.system.data.RunnerApplication</mainClass>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
                         </manifest>

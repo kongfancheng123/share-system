@@ -4,8 +4,7 @@
     <el-header id="salfmenu">
       <!-- leftbar -->
       <div class="leftbar">
-        <img src="@/assets/logo.png"
-             width="300">
+
 
         <!-- el-menu -->
         <el-menu router
@@ -26,7 +25,16 @@
 
 
 
+
+
+
         </el-menu>
+      </div>
+
+      <div class="rightbar">
+                            <el-button type="primary"
+                                        class="cancle"
+                                        @click="cancle()">注销</el-button>
       </div>
 
     </el-header>
@@ -59,7 +67,12 @@ export default {
                   } else{
                    return null;}
 
-              }
+        },
+        cancle(){
+            let vm = this
+            vm.$router.push({ path: '/login' })
+
+        }
 
     }
 }
